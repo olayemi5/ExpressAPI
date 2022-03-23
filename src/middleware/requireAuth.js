@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
-const User = mongoose.model('User');
+const Spy = mongoose.model('Spy');
 
 
 module.exports = (req, res, next) => {
@@ -10,13 +10,13 @@ module.exports = (req, res, next) => {
 
     const token = authorization.replace('Bearer ', '');
 
-    jwt.verify(token, 'BLABLABLA', async (err, payload) => {
+    jwt.verify(token, 'SPYWARETRACKER', async (err, payload) => {
         if (err) return res.status(401).send({ error: 'You must be logged in.' })
 
-        const { userId } = payload;
+        const { spyId } = payload;
 
-        const user = await User.findById(userId);
-        req.user = user;
+        const spy = await Spy.findById(spyId);
+        req.spy = spy;
         next();
     })
 }

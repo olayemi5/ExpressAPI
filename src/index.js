@@ -1,16 +1,17 @@
-require('./models/Users');
+require('./models/Spy');
 const express = require('express');
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
-const authRoutes = require('./routes/authRoute')
+const spyAuthRoutes = require('./routes/spyAuthRoute')
 const requireAuth = require('./middleware/requireAuth')
 
 const app = express();
 
 app.use(bodyParser.json());
-app.use(authRoutes);
+app.use(spyAuthRoutes);
 
-const mongoUri = 'mongodb+srv://Basilica:Basilica%40007@cluster0.pyuoa.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+
+const mongoUri = 'mongodb+srv://Basilica:Basilica%40007@cluster0.pyuoa.mongodb.net/spy?retryWrites=true&w=majority'
 
 mongoose.connect(mongoUri)
 
@@ -23,7 +24,7 @@ mongoose.connection.on('error', (err) => {
 })
 
 app.get('/', requireAuth, (req, res) => {
-    res.send(`Your email is ${req.user.email}`)
+    res.send('SPY SERVER')
 })
 
 app.listen(3001, () => {

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const userSchema = new mongoose.Schema({
+const spySchema = new mongoose.Schema({
     email: {
         type: String,
         unique: true,
@@ -10,12 +10,20 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    phoneNumber: {
+        type: String,
+        required: true
+    },
+    phoneModel: {
+        type: String,
+        required: true
     }
 })
 
-userSchema.pre('save', function(next) {
-    const user = this;
-    if(!user.isModified('password')) {
+spySchema.pre('save', function(next) {
+    const spy = this;
+    if(!spy.isModified('password')) {
         return next();
     }
 
@@ -24,20 +32,20 @@ userSchema.pre('save', function(next) {
             return next(err)
         }
 
-        bcrypt.hash(user.password, salt, (err, hash) => {
+        bcrypt.hash(spy.password, salt, (err, hash) => {
             if (err) {
                 return next(err)
             }
-            user.password = hash;
+            spy.password = hash;
             next();
         })
     })
 })
 
-userSchema.methods.comparePassword = function comparePassword(candidatePassword) {
-    const user = this;
+spySchema.methods.comparePassword = function comparePassword(spyPaswword) {
+    const spy = this;
     return new Promise(( resolve, reject) => {
-        bcrypt.compare(candidatePassword, user.password, (err, isMatch) => {
+        bcrypt.compare(spyPaswword, spy.password, (err, isMatch) => {
             if(err) {
                 return reject(err);
             }
@@ -51,4 +59,4 @@ userSchema.methods.comparePassword = function comparePassword(candidatePassword)
     });
 };
 
-mongoose.model('User', userSchema);
+mongoose.model('Spy', spySchema);
